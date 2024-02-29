@@ -1,16 +1,23 @@
-import java.util.Scanner;
+pipeline {
+    agent {
+        node {
+           label "jenkins-slave"
+        }
+     }
+environment {
+    PATH = "/opt/apache-maven-3.8.8/bin:$PATH"
+}
 
-public class EvenOdd {
-
-    public static void main(String[] args) {
-
-        Scanner reader = new Scanner(System.in);
-
-        System.out.print("Enter a number: ");
-        int num = reader.nextInt();
-
-        if(num % 2 == 0)
-            System.out.println(num + " is even");
-        else
-            System.out.println(num + " is odd");
-    }
+    stages {
+        stage('Clone Github repo') {
+            steps {
+                git 'https://github.com/sunilkumarrajak/devops.git'
+            }
+         }
+         stage('build') {
+             steps {
+                 sh 'mvn clean install'
+             }
+          }
+      }
+}
